@@ -41,7 +41,9 @@ library(plotly)
 library(shinyjqui)
 library(shinycssloaders)
 library(webshot)
-source("strainhub_functions.R")
+#loads core strainhub functions from package
+library(strainhub)
+#source("strainhub_functions.R")
 
 ## Load in last
 library(castor)
@@ -1033,8 +1035,8 @@ server <- function(input, output, session) {
       
     } else if(input$tree_input_type == "Create Neighbor-Joining Tree"){
       validate(
-        need(input$treefile != "", "\n1. Please upload a tree file."),
-        need(input$geodatafile != "",  "\n3b. Please upload the accompanying geodata file.")
+        need(input$treefile != "", "\n1. Please upload a tree phy file ."),
+        need(input$geodatafile != "",  "\n3b. Please upload the accompanying csv geodata file.")
       )
       output$mapoutput <- leaflet::renderLeaflet({
         make_map(graph(),
@@ -1061,33 +1063,33 @@ server <- function(input, output, session) {
   # })
     
   ## Globe Output
-  output$globeoutput <- eventReactive(input$plotbutton, {
-    if (input$tree_input_type == "Parsimony"){
-      validate(
-        need(input$treefile != "", "\n1. Please upload a tree file."),
-        need(input$csvfile != "",  "\n3a. Please upload the accompanying metadata file."),
-        need("Accession" %in% colnames(rv$metadata),  "\nWarning: `Accession` column not found in the metadata file. Maybe you need to rename your existing ID column?"), 
-        need(input$geodatafile != "",  "\n3b. Please upload the accompanying geodata file."),
-        need(input$columnselection %in% colnames(rv$geodata),
-            "\n4b. The current selected state doesn't match any columns in the geodata file. Please select a different column.")
-      )
-      output$globeoutput <- render_globe({make_globe(graph(), rv$geodata, input$columnselection)})
+#  output$globeoutput <- eventReactive(input$plotbutton, {
+#    if (input$tree_input_type == "Parsimony"){
+#      validate(
+#        need(input$treefile != "", "\n1. Please upload a tree file."),
+#        need(input$csvfile != "",  "\n3a. Please upload the accompanying metadata file."),
+ #       need("Accession" %in% colnames(rv$metadata),  "\nWarning: `Accession` column not found in the metadata file. Maybe you need to rename your existing ID column?"), 
+ #       need(input$geodatafile != "",  "\n3b. Please upload the accompanying geodata file."),
+#        need(input$columnselection %in% colnames(rv$geodata),
+#            "\n4b. The current selected state doesn't match any columns in the geodata file. Please select a different column.")
+ #     )
+#      output$globeoutput <- render_globe({make_globe(graph(), rv$geodata, input$columnselection)})
       
-    } else if(input$tree_input_type == "BEAST Phylogeography"){
-      validate(
-        need(input$treefile != "", "\n1. Please upload a tree file."),
-        need(input$geodatafile != "",  "\n3b. Please upload the accompanying geodata file.")
-      )
-      output$globeoutput <- render_globe({make_globe(graph(), rv$geodata, input$columnselection)})
+ #   } else if(input$tree_input_type == "BEAST Phylogeography"){
+#      validate(
+ #       need(input$treefile != "", "\n1. Please upload a tree file."),
+#        need(input$geodatafile != "",  "\n3b. Please upload the accompanying geodata file.")
+ #     )
+#      output$globeoutput <- render_globe({make_globe(graph(), rv$geodata, input$columnselection)})
       
-    } else if(input$tree_input_type == "Create Neighbor-Joining Tree"){
-      validate(
-        need(input$treefile != "", "\n1. Please upload a tree file."),
-        need(input$geodatafile != "",  "\n3b. Please upload the accompanying geodata file.")
-      )
-      output$globeoutput <- render_globe({make_globe(graph(), rv$geodata, input$columnselection)})
-    }
-    })
+ #   } else if(input$tree_input_type == "Create Neighbor-Joining Tree"){
+  #    validate(
+ #       need(input$treefile != "", "\n1. Please upload a tree file."),
+#        need(input$geodatafile != "",  "\n3b. Please upload the accompanying geodata file.")
+  #    )
+  #    output$globeoutput <- render_globe({make_globe(graph(), rv$geodata, input$columnselection)})
+  #  }
+   # })
   
   
   
@@ -1132,8 +1134,8 @@ server <- function(input, output, session) {
   # observe({
     if (input$tree_input_type == "Parsimony"){
       validate(
-        need(input$treefile != "", "\n1. Please upload a tree file."),
-        need(input$csvfile != "",  "\n2a. Please upload the accompanying metadata file."),
+        need(input$treefile != "", "\n1. Please upload a tree phy file."),
+        need(input$csvfile != "",  "\n2a. Please upload the accompanying csv metadata file."),
         # need(input$columnSelection != "",  "\n3. List the columns and pick one to use.")
         if (exists("input$treefile") & exists("input$csvfile")){
           # need(!input$input$columnselection %in% getUsableColumns(treeFileName = input$treefile$datapath,

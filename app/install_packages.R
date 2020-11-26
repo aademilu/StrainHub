@@ -33,7 +33,7 @@ packages <- c("shiny",
               "ggtree",
               "plotly",
               "webshot",
-              "shinyjqui")
+              "shinyjqui", "pkg")
 
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
   install.packages(setdiff(packages, rownames(installed.packages())))  
